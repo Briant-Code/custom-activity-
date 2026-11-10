@@ -1,4 +1,4 @@
-import disnake
+import discord
 import asyncio
 import os
 import random
@@ -18,8 +18,9 @@ ACTIVITIES = [
     "Reading a Book"
 ]
 
-class SelfBotClient(disnake.Client):
+class SelfBotClient(discord.AutoShardedClient):
     def __init__(self, intents):
+        # Inisialisasi Client dengan intents yang sudah ditentukan
         super().__init__(intents=intents)
         self.loop_task = None
 
@@ -34,7 +35,7 @@ class SelfBotClient(disnake.Client):
                 activity_name = random.choice(ACTIVITIES)
                 
                 # Ubah status menjadi "Playing" dengan nama activity
-                await self.change_presence(activity=disnake.Game(name=activity_name))
+                await self.change_presence(activity=discord.Game(name=activity_name))
                 
                 print(f"Status changed to: {activity_name}")
                 
@@ -45,8 +46,8 @@ class SelfBotClient(disnake.Client):
                 print(f"Error changing activity: {e}")
                 await asyncio.sleep(60)
 
-# SETUP INTENTS UNTUK DISNAKE
-intents = disnake.Intents.default()
+# SETUP INTENTS UNTUK PY-CORD
+intents = discord.Intents.default()
 intents.message_content = True 
 intents.guilds = True
 intents.members = True
@@ -54,9 +55,9 @@ intents.members = True
 client = SelfBotClient(intents=intents)
 
 try:
-    # Hapus bot=False karena sudah otomatis terdeteksi di disnake terbaru
+    # Jalankan tanpa parameter bot=False karena py-cord mendeteksi otomatis berdasarkan token
     client.run(TOKEN)
-except disnake.LoginFailure:
+except discord.LoginFailure:
     print("Gagal login! Pastikan token yang digunakan adalah User Token.")
 except KeyboardInterrupt:
     print("Bot dihentikan oleh pengguna.")
