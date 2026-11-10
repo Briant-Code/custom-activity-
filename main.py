@@ -31,7 +31,6 @@ class SelfBotClient(discord.Client):
     async def change_activity_loop(self):
         while True:
             try:
-                # Pilih aktivitas acak
                 activity_name = random.choice(ACTIVITIES)
                 
                 # Ubah status menjadi "Playing" dengan nama activity
@@ -46,12 +45,17 @@ class SelfBotClient(discord.Client):
                 print(f"Error changing activity: {e}")
                 await asyncio.sleep(60)
 
-# Setup Intents
+# SETUP INTENTS YANG LEBIH LENGKAP UNTUK SELF-BOT
 intents = discord.Intents.default()
+intents.message_content = True 
+intents.guilds = True
+intents.members = True
+intents.channels = True
+
 client = SelfBotClient(intents=intents)
 
 try:
-    # PERUBAHAN DI SINI: Hapus bot=False agar kompatibel dengan versi terbaru
+    # Hapus bot=False agar kompatibel dengan versi terbaru
     client.run(TOKEN)
 except discord.LoginFailure:
     print("Gagal login! Pastikan token yang digunakan adalah User Token (Self-Bot Token).")
