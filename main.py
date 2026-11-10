@@ -45,17 +45,16 @@ class SelfBotClient(discord.Client):
                 print(f"Error changing activity: {e}")
                 await asyncio.sleep(60)
 
-# SETUP INTENTS YANG LEBIH LENGKAP UNTUK SELF-BOT
+# SETUP INTENTS YANG AMAN UNTUK SELF-BOT
 intents = discord.Intents.default()
 intents.message_content = True 
 intents.guilds = True
 intents.members = True
-intents.channels = True
 
+# Hapus baris intents.channels = True karena sudah tidak kompatibel
 client = SelfBotClient(intents=intents)
 
 try:
-    # Hapus bot=False agar kompatibel dengan versi terbaru
     client.run(TOKEN)
 except discord.LoginFailure:
     print("Gagal login! Pastikan token yang digunakan adalah User Token (Self-Bot Token).")
