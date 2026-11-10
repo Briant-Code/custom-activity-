@@ -18,14 +18,16 @@ ACTIVITIES = [
     "Reading a Book"
 ]
 
-class SelfBotClient(discord.AutoShardedClient):
+class FlexibleBot(discord.Client):
     def __init__(self, intents):
-        # Inisialisasi Client dengan intents yang sudah ditentukan
+        # Kita inisialisasi Client biasa, bukan AutoShardedClient agar lebih ringan
         super().__init__(intents=intents)
         self.loop_task = None
 
     async def on_ready(self):
-        print(f'Successfully logged in as: {self.user}')
+        print(f'Logged in as: {self.user} (ID: {self.user.id})')
+        print(f'Type: {"User" if self.user.bot == False else "Bot"}')
+        
         # Mulai task pengubah status otomatis
         self.loop_task = asyncio.create_task(change_activity_loop())
 
@@ -46,18 +48,21 @@ class SelfBotClient(discord.AutoShardedClient):
                 print(f"Error changing activity: {e}")
                 await asyncio.sleep(60)
 
-# SETUP INTENTS UNTUK PY-CORD
+# SETUP INTENTS YANG AMAN UNTUK SEMUA JENIS TOKEN
+# Ini adalah kunci agar tidak error 'AttributeError' dan kompatibel dengan Self-Bot & Bot Biasa
 intents = discord.Intents.default()
 intents.message_content = True 
 intents.guilds = True
 intents.members = True
+# Penting: Jangan set intents lain yang tidak perlu agar tidak kena rate limit atau error
 
-client = SelfBotClient(intents=intents)
+client = FlexibleBot(intents=intents)
 
 try:
-    # Jalankan tanpa parameter bot=False karena py-cord mendeteksi otomatis berdasarkan token
+    # Jalankan token. Tidak ada parameter bot=False atau bot=True yang dipaksa.
+    # discord.py akan mendeteksi sendiri berdasarkan token.
     client.run(TOKEN)
 except discord.LoginFailure:
-    print("Gagal login! Pastikan token yang digunakan adalah User Token.")
+    print("Gagal login! Pastikan token masih aktif.")
 except KeyboardInterrupt:
     print("Bot dihentikan oleh pengguna.")
