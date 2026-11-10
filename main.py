@@ -54,8 +54,8 @@ intents.members = True
 client = SelfBotClient(intents=intents)
 
 try:
-    # Jalankan sebagai User Client (Self-Bot)
-    client.run(TOKEN, bot=False)
+    # Hapus bot=False karena sudah otomatis terdeteksi di disnake terbaru
+    client.run(TOKEN)
 except disnake.LoginFailure:
     print("Gagal login! Pastikan token yang digunakan adalah User Token.")
 except KeyboardInterrupt:
